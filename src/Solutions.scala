@@ -67,9 +67,33 @@ object P07 {
   }
 }
 
-//P08 (**) Eliminate consecutive duplicates of list elements.
+// P08 (**) Eliminate consecutive duplicates of list elements.
 object P08 {
   def noDupElements(lst: List[Any]): List[Any] = lst match{
     case Nil => Nil
+    case h :: tail => h :: noDupElements(tail.dropWhile(x => x == h))
+  }
+}
+
+// P09 (**) Pack consecutive duplicates of list elements into sublists.
+object P09 {
+  def pack[A](lst: List[A]): List[List[A]] =
+    lst.foldRight(List[List[A]]()){
+      case (h, (ys@(y::_)) :: tail) if h == y => {
+        (h::ys) :: tail
+      }
+      case (h, tail) => {
+        List(h) :: tail
+      }
+    }
+}
+
+// P10 (*) Run-length encoding of a list.
+object P10 {
+  def encodeDup[A](lst: List[A]): List[List[Any]] = {
+    var result: List[List[Any]] = List()
+    for (l <- P09.pack(lst))
+      result = result :+ List(l.size,l.head)
+    result
   }
 }
